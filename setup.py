@@ -13,5 +13,6 @@ setup(
         'six',
         'conf',
         'natsort',
+        'Flask-HTTPAuth',
     ],
 )

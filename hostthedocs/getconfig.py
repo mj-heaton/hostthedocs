@@ -13,7 +13,7 @@ except ImportError:  # pragma: no cover
     conf = None
 
 
-def get(attr, default):
+def get(attr: str, default: str) -> str:
     result = os.getenv('HTD_' + attr.upper())
     if result is None:
         result = getattr(conf, attr, None)
@@ -21,10 +21,33 @@ def get(attr, default):
         result = default
     return result
 
+def _string_to_bool(value: str) -> bool:
+    value = str(value)
+
+    valid = {
+        "yes": True,
+        "y": True,
+        "ye": True,
+        "no": False,
+        "n": False,
+        "true": True,
+        "false": False,
+    }
+
+    value = value.strip().lower()
+
+    if value not in valid:
+        raise ValueError(f"Error, invalid bool config argument: {value}")
+
+    return valid[value]
+
 
 docfiles_dir = get('docfiles_dir', 'hostthedocs/static/docfiles')
 #assert os.path.isdir(docfiles_dir), 'Must exist: %s' % docfiles_dir
 docfiles_link_root = get('docfiles_link_root', 'static/docfiles')
+enable_basic_auth: bool = _string_to_bool(get('enable_basic_auth', 'True'))
+
+user_db: str = get('user_db', 'users.json')
 
 copyright = get('copyright', '')
 

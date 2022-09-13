@@ -86,6 +86,13 @@ You can use the Linux ``zip`` command to zip a directory after building it throu
 
 .. _uploaddocs-label:
 
+Creating a user so you can login
+--------------------------------
+
+    python adduser.py --user username --password password
+    
+Note: You can disable login by setting `HTD_ENABLE_BASIC_AUTH=False`
+
 Uploading your docs
 -------------------
 
@@ -102,13 +109,15 @@ using the Python ``requests`` library::
             "version": "0.1.0",
             "description": "This is my project."
         },
-        files={"archive": ("archive.zip", open(zippath, 'rb'))})
+        files={"archive": ("archive.zip", open(zippath, 'rb'))},
+        auth = HTTPBasicAuth('user', 'pass')
+    )
 
 You can even do the entire zipping and uploading via the command line::
 
     cd /path/to/html
     zip -r archive.zip *
-    curl -X POST \
+    curl --user username:password -X POST \
       -F filedata=@archive.zip \
       -F name="My Project" \
       -F version="0.1.0" \
